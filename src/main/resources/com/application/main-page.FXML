@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.application.ChartController">
+   <center>
+      <StackPane fx:id="chartContainer" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <VBox alignment="TOP_CENTER" maxHeight="-1.0" prefHeight="-1.0" prefWidth="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="cursorButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cursorButtonPressed" prefHeight="35.0" prefWidth="35.0" text="十">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="zoomButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomButtonPressed" prefHeight="35.0" prefWidth="35.0" text="🔍">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="indicatorsButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" text="📊">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" />
+            <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </VBox>
+   </left>
+   <right>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefWidth="200.0" style="-fx-background-color: cyan;" styleClass="custom-scroll-pane" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+         <content>
+            <VBox maxWidth="200.0" minWidth="200.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="40.0" prefWidth="180.0">
+                     <children>
+                        <Label alignment="CENTER" text="Watchlist">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button fx:id="addToWatchlistButton" mnemonicParsing="false" onAction="#addToWatchlist" text="+">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <TableView fx:id="watchlistTable">
+                    <columns>
+                      <TableColumn fx:id="companyColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Company" />
+                      <TableColumn fx:id="symbolColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Symbol" />
+                    </columns>
+                  </TableView>
+               </children>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </right>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleImport" text="Load" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleExport" text="Export" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="200.0" style="-fx-background-color: lightblue;">
+               <children>
+                  <TextField fx:id="searchTextField" alignment="CENTER">
+                     <font>
+                        <Font size="14.0" />
+                     </font></TextField>
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonPressed" text="🔍">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <ComboBox prefWidth="150.0">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>
