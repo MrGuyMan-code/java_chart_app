@@ -2,20 +2,29 @@ package com.application;
 
 import com.application.utils.ChartUtils;
 import com.application.handlers.MouseHandlers;
+import com.application.managers.IndicatorManager;
 import com.application.models.WatchlistItem;
 import com.application.utils.WatchlistManager;
 import com.application.utils.WatchlistStorage;
 import com.application.utils.WatchlistStorage.ImportResult;
+import com.application.services.IndicatorService;
 import com.application.services.WatchlistService;
+import com.application.controllers.AddIndicatorController;
+import com.application.controllers.IndicatorListController;
+import com.application.models.Indicator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import org.jfree.chart.JFreeChart;
@@ -49,6 +58,10 @@ public class ChartController implements Initializable{
     @FXML
     private TextField searchTextField;
     
+    @FXML 
+    private Button indicatorsButton;
+    @FXML 
+    private ComboBox<String> indicatorComboBox;
 
     private JFreeChart chart;
     
@@ -61,6 +74,8 @@ public class ChartController implements Initializable{
     private WatchlistService watchlistService;
     
     private OHLCDataset dataset;
+    
+    private IndicatorManager indicatorManager;
     
     private static final int YEARS = 10;
 	
@@ -91,6 +106,18 @@ public class ChartController implements Initializable{
         mouseHandlers = new MouseHandlers(chart, viewer, zoomButton, cursorButton);
         
         mouseHandlers.setDataset(dataset);
+        
+        // 🔥🔥🔥 INITIALIZEAZĂ INDICATOR MANAGER (ACEASTA LIPSEA!)
+        indicatorManager = new IndicatorManager(
+            chartContainer, zoomButton, cursorButton, indicatorComboBox
+        );
+        
+        // 🔥 SETEAZĂ REFERINȚELE ÎN INDICATOR MANAGER
+        indicatorManager.setChart(chart, viewer, mouseHandlers, dataset, symbol);
+        
+        // 🔥 BUTONUL DE INDICATORI
+        indicatorsButton.setOnAction(event -> indicatorManager.showIndicatorList());
+
         
         // Setup watchlist
         watchlistManager = new WatchlistManager(watchlistTable, symbolColumn, companyColumn);
@@ -137,6 +164,12 @@ public class ChartController implements Initializable{
         mouseHandlers = new MouseHandlers(chart, viewer, zoomButton, cursorButton);
         
         mouseHandlers.setDataset(dataset);
+        
+        // 🔥 ACTUALIZEAZĂ REFERINȚELE ÎN INDICATOR MANAGER
+        indicatorManager.setChart(chart, viewer, mouseHandlers, dataset, symbol);
+        
+        // 🔥 REAPLICĂ INDICATORII PE NOUL GRAFIC
+        indicatorManager.reapplyIndicators();
         
         chartContainer.getChildren().add(viewer);
 		

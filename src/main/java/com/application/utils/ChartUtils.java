@@ -12,8 +12,10 @@ import org.jfree.data.xy.DefaultOHLCDataset;
 import org.jfree.data.xy.OHLCDataItem;
 import org.jfree.data.xy.OHLCDataset;
 
+import com.application.services.YahooFinanceService;
+
 import javafx.scene.input.ScrollEvent;
-import com.application.services.YahooFinanceService;  // 🔥 IMPORT
+
 
 
 import java.awt.*;
@@ -37,41 +39,40 @@ public class ChartUtils {
 
 	    XYPlot plot = (XYPlot) chart.getPlot();
 
+	    // 🔥 CONFIGUREAZĂ AXELE
 	    DateAxis domainAxis = (DateAxis) plot.getDomainAxis();
 	    domainAxis.setAutoRange(true);
-	    domainAxis.setFixedAutoRange(90L * 24 * 60 * 60 * 1000); 
+	    domainAxis.setFixedAutoRange(90L * 24 * 60 * 60 * 1000);
 
 	    NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 	    rangeAxis.setAutoRange(true);
 	    rangeAxis.setAutoRangeIncludesZero(false);
 
-	    // 🔥 RENDERER PERSONALIZAT COMPLET
+	    // 🔥 CREEZĂ RENDERER-UL PERSONALIZAT PENTRU CANDLESTICK
 	    CandlestickRenderer renderer = new CandlestickRenderer() {
 	        @Override
 	        public Paint getItemPaint(int series, int item) {
-	            // Returnează culoarea corectă pentru fiecare lumânare
 	            OHLCDataset highLowData = (OHLCDataset) getPlot().getDataset(series);
+	            if (highLowData == null) {
+	                return Color.GRAY;
+	            }
 	            double yOpen = highLowData.getOpenValue(series, item);
 	            double yClose = highLowData.getCloseValue(series, item);
-	            
-	            if (yClose >= yOpen) {
-	                return Color.GREEN;
-	            } else {
-	                return Color.RED;
-	            }
+	            return (yClose >= yOpen) ? Color.GREEN : Color.RED;
 	        }
-	        
+
 	        @Override
 	        public Paint getItemOutlinePaint(int series, int item) {
-	            // 🔥 ACEASTA ESTE CHEIA - conturul are aceeași culoare ca și corpul
 	            return getItemPaint(series, item);
 	        }
 	    };
-	    
+
 	    renderer.setAutoWidthMethod(CandlestickRenderer.WIDTHMETHOD_SMALLEST);
 	    renderer.setAutoWidthFactor(CANDLE_WIDTH_RATIO);
-	    
-	    plot.setRenderer(renderer);
+
+	    // 🔥 SETEAZĂ RENDERER-UL LA INDEXUL 0
+	    plot.setRenderer(0, renderer);
+	    plot.setDataset(0, dataset);
 
 	    return chart;
 	}
@@ -324,16 +325,17 @@ public class ChartUtils {
      */
     public static void updateChartWithNewData(JFreeChart chart, OHLCDataset newDataset) {
         XYPlot plot = (XYPlot) chart.getPlot();
-        
-        plot.setDataset(newDataset);
-        
+
+        // 🔥 SETEAZĂ NOUL DATASET LA INDEXUL 0
+        plot.setDataset(0, newDataset);
+
         // 🔥 RECONFIGUREAZĂ RENDERER-UL EXISTENT
-        CandlestickRenderer renderer = (CandlestickRenderer) plot.getRenderer();
+        CandlestickRenderer renderer = (CandlestickRenderer) plot.getRenderer(0);
         if (renderer != null) {
             renderer.setAutoWidthMethod(CandlestickRenderer.WIDTHMETHOD_SMALLEST);
             renderer.setAutoWidthFactor(CANDLE_WIDTH_RATIO);
         }
-        
+
         chart.fireChartChanged();
     }
     
